@@ -207,20 +207,22 @@ class Ripgrepy(object):
         self.run_rg = self.run
 
     @_logger
-    def run(self, universal_newlines=True) -> RipGrepOut:
+    def run(self, universal_newlines=True, cwd: str = None) -> RipGrepOut:
         """
         Returns an instace of the Ripgrepy object
 
         Args:
             universal_newlines (bool, optional): Whether to use universal newlines. Defaults to True.
+            cwd (str, optional): The current working directory. Defaults to None.
 
         :return: self
         :rtype: RipGrepOut
         """
-        self.command.append(self.regex_pattern)
+        if self.regex_pattern:
+            self.command.append(self.regex_pattern)
         self.command.append(self.path)
         output = subprocess.run(
-            self.command, capture_output=True, universal_newlines=universal_newlines
+            self.command, capture_output=True, universal_newlines=universal_newlines, cwd=cwd
         )
         if output.returncode == 0:
             self._output = (
